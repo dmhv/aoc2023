@@ -4,7 +4,7 @@
 
 fun main() {
     val lines = readInput("01")
-    println(lines.map { lineToInt(it) } .reduce { acc, i -> acc + i } )
+    lines.map { lineToInt(it) } .reduce { acc, i -> acc + i } .println()
 }
 
 private fun lineToInt(it: String): Int {

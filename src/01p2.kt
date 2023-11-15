@@ -13,7 +13,7 @@ fun main() {
         for (l in lines) {
             cumSum += lineToInt(l)
             if (seen.contains(cumSum)) {
-                println(cumSum)
+                cumSum.println()
                 exitProcess(0)
             }
             seen.add(cumSum)
