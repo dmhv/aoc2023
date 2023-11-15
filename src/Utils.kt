@@ -2,11 +2,11 @@ import java.io.File
 import java.math.BigInteger
 import java.security.MessageDigest
 
-/**
- * Reads lines from the given input txt file.
- */
-fun readInput(name: String) = File("src", "$name.txt")
-    .readLines()
+fun readFile(fileName: String): MutableList<String> {
+    val lineList = mutableListOf<String>()
+    File(fileName).useLines { lines -> lines.forEach { lineList.add(it) } }
+    return lineList
+}
 
 /**
  * Converts string to md5 hash.
