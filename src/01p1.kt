@@ -3,7 +3,7 @@
  */
 
 fun main() {
-    val lines = readFile("inp/01.txt")
+    val lines = readInput("01")
     println(lines.map { lineToInt(it) } .reduce { acc, i -> acc + i } )
 }
 

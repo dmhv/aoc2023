@@ -5,7 +5,7 @@ import kotlin.system.exitProcess
  */
 
 fun main() {
-    val lines = readFile("inp/01.txt")
+    val lines = readInput("01")
     var cumSum = 0
     val seen = mutableSetOf<Int>()
 
