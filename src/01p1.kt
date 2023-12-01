@@ -2,13 +2,13 @@ fun main() {
     val lines = readInput("01")
     var out = 0
     lines.forEach {
-        val ints = extractInts(it)
-        val firstAndLast = "${ints.first()}${ints.last()}"
+        val digits = extractDigits(it)
+        val firstAndLast = "${digits.first()}${digits.last()}"
         out += firstAndLast.toInt()
     }
     println(out)
 }
 
-private fun extractInts(it: String): List<Char> {
+private fun extractDigits(it: String): List<Char> {
     return it.filter { it.isDigit() }.toList()
 }

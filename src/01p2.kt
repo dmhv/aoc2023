@@ -2,14 +2,14 @@ fun main() {
     val lines = readInput("01")
     var out = 0
     lines.forEach {
-        val ints = extractInts(it)
-        val firstAndLast = "${ints.first()}${ints.last()}"
+        val digits = extractDigits(it)
+        val firstAndLast = "${digits.first()}${digits.last()}"
         out += firstAndLast.toInt()
     }
     println(out)
 }
 
-private fun extractInts(it: String): List<String> {
+private fun extractDigits(it: String): List<String> {
     val t2d = mapOf(
         "one" to "1",
         "two" to "2",
