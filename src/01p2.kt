@@ -25,25 +25,13 @@ private fun extractDigits(it: String): List<String> {
 
     // process proper digits
     for (target in t2d.values) {
-        val indices = findAllIndices(it, target)
-        indices.forEach { idxToDigit[it] = target }
+        it.allIndicesOf(target).forEach { idxToDigit[it] = target }
     }
 
     // process digits as text
     for (key in t2d.keys) {
-        val indices = findAllIndices(it, key)
-        indices.forEach { idxToDigit[it] = t2d[key]!! }
+        it.allIndicesOf(key).forEach { idxToDigit[it] = t2d[key]!! }
     }
 
     return idxToDigit.toSortedMap().values.toList()
-}
-
-private fun findAllIndices(inp: String, target: String): List<Int> {
-    val out = mutableListOf<Int>()
-    var idx = inp.indexOf(target)
-    while (idx >= 0) {
-        out.add(idx)
-        idx = inp.indexOf(target, idx+1)
-    }
-    return out.toList()
 }

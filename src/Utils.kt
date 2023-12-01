@@ -15,3 +15,13 @@ fun String.md5() = BigInteger(1, MessageDigest.getInstance("MD5").digest(toByteA
  * The cleaner shorthand for printing output.
  */
 fun Any?.println() = println(this)
+
+fun String.allIndicesOf(target: String): List<Int> {
+    val out = mutableListOf<Int>()
+    var idx = this.indexOf(target)
+    while (idx >= 0) {
+        out.add(idx)
+        idx = this.indexOf(target, idx+1)
+    }
+    return out.toList()
+}
