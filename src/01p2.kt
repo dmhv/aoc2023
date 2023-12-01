@@ -6,7 +6,7 @@ fun main() {
         val firstAndLast = "${digits.first()}${digits.last()}"
         out += firstAndLast.toInt()
     }
-    println(out)
+    out.println()
 }
 
 private fun extractDigits(it: String): List<String> {
