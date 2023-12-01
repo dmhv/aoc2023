@@ -1,12 +1,6 @@
 fun main() {
     val lines = readInput("01")
-    var out = 0
-    lines.forEach {
-        val digits = extractDigits(it)
-        val firstAndLast = "${digits.first()}${digits.last()}"
-        out += firstAndLast.toInt()
-    }
-    out.println()
+    lines.map { extractDigits(it) }.sumOf { "${it.first()}${it.last()}".toInt() }.println()
 }
 
 private fun extractDigits(it: String): List<String> {
