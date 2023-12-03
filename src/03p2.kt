@@ -23,10 +23,12 @@ fun main() {
     }
 
     anchors
-        .filter { it.value == "*" && it.countAdjacent(numbers) == 2 }
-        .map {gear -> numbers.filter { it.isAdjacentTo(gear) }
-        .fold(1) { acc, it -> acc * it.value }}
+        .filter { it.value == "*"}
+        .map {gear -> numbers.filter { it.isAdjacentTo(gear) }}
+        .filter {it.size == 2}
+        .map { it.fold(1) {acc, i -> acc * i.value}  }
         .sum()
         .println()
 }
 
+// 84051670
