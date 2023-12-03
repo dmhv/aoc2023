@@ -21,6 +21,7 @@ fun main() {
     }
 
     anchors
+        .asSequence()
         .filter { it.value == "*" }
         .map { gear -> numbers.filter { it.isAdjacentTo(gear) } }
         .filter { it.size == 2 }
@@ -28,5 +29,3 @@ fun main() {
         .sum()
         .println()
 }
-
-// 84051670
