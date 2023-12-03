@@ -8,9 +8,7 @@ fun main() {
     data class Anchor(val row: Int, val col: Int, val value: String)
 
     fun Num.isAdjacentTo(anchor: Anchor) =
-        (anchor.row in (this.row-1)..(this.row+1)) && (anchor.col in (this.colStart-1)..(this.colEnd+1))
-
-    fun Anchor.countAdjacent(ns: List<Num>) = ns.filter { it.isAdjacentTo(this) }.size
+        (anchor.row in (this.row - 1)..(this.row + 1)) && (anchor.col in (this.colStart - 1)..(this.colEnd + 1))
 
     val numbers = mutableListOf<Num>()
     val anchors = mutableListOf<Anchor>()
@@ -23,10 +21,10 @@ fun main() {
     }
 
     anchors
-        .filter { it.value == "*"}
-        .map {gear -> numbers.filter { it.isAdjacentTo(gear) }}
-        .filter {it.size == 2}
-        .map { it.fold(1) {acc, i -> acc * i.value}  }
+        .filter { it.value == "*" }
+        .map { gear -> numbers.filter { it.isAdjacentTo(gear) } }
+        .filter { it.size == 2 }
+        .map { it.fold(1) { acc, i -> acc * i.value } }
         .sum()
         .println()
 }
