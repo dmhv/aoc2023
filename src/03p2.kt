@@ -21,7 +21,6 @@ fun main() {
     }
 
     anchors
-        .asSequence()
         .filter { it.value == "*" }
         .map { gear -> numbers.filter { it.isAdjacentTo(gear) } }
         .filter { it.size == 2 }
