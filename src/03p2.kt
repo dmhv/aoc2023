@@ -12,7 +12,6 @@ fun main() {
 
     fun Anchor.countAdjacent(ns: List<Num>) = ns.filter { it.isAdjacentTo(this) }.size
 
-    // parsing
     val numbers = mutableListOf<Num>()
     val anchors = mutableListOf<Anchor>()
     for ((r, line) in lines.withIndex()) {

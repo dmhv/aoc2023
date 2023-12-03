@@ -12,7 +12,6 @@ fun main() {
 
     fun Num.isAdjacentToAnyOf(anchors: List<Anchor>) = anchors.any { this.isAdjacentTo(it) }
 
-    // parsing
     val numbers = mutableListOf<Num>()
     val anchors = mutableListOf<Anchor>()
     for ((r, line) in lines.withIndex()) {
