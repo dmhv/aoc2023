@@ -1,17 +1,18 @@
 fun main() {
     val lines = readInput("03")
 
-    data class Num(val row: Int, val colStart: Int, val colEnd: Int, val value: Int)
-    data class Anchor(val row: Int, val col: Int, val value: String)
-
     val regexNum = Regex("(\\d+)")
     val regexAnchor = Regex("([^0-9.])")
+
+    data class Num(val row: Int, val colStart: Int, val colEnd: Int, val value: Int)
+    data class Anchor(val row: Int, val col: Int, val value: String)
 
     fun Num.isAdjacentTo(anchor: Anchor) =
         (anchor.row in (this.row-1)..(this.row+1)) && (anchor.col in (this.colStart-1)..(this.colEnd+1))
 
     fun Anchor.countAdjacent(ns: List<Num>) = ns.filter { it.isAdjacentTo(this) }.size
 
+    // parsing
     val numbers = mutableListOf<Num>()
     val anchors = mutableListOf<Anchor>()
     for ((r, line) in lines.withIndex()) {
