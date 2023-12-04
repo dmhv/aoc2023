@@ -17,9 +17,8 @@ fun main() {
         numCopies[cardId] = cntThisCard
 
         for (i in 1..Card(presentNums, winningNums).numMatches()) {
-            numCopies[cardId+i] = numCopies.getOrDefault(cardId+i, 0) + cntThisCard
+            numCopies[cardId + i] = numCopies.getOrDefault(cardId + i, 0) + cntThisCard
         }
     }
     numCopies.values.sum().println()
 }
-
