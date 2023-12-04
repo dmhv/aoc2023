@@ -12,7 +12,7 @@ private fun minSetPower(inp: String): Int {
             val numAndColor = it.split(" ")
             val num = numAndColor[0].toInt()
             val color = numAndColor[1]
-            if (counts[color]!! < num) counts[color] = num
+            if (counts.getOrDefault(color, 0) < num) counts[color] = num
         }
     }
     return counts.values.fold(1) { total, it -> total * it }

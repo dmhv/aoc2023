@@ -16,7 +16,7 @@ private fun isPossible(inp: String): Boolean {
         val numAndColor = it.split(" ")
         val num = numAndColor[0].toInt()
         val color = numAndColor[1]
-        if (counts[color]!! < num) return false
+        if (counts.getOrDefault(color, 0) < num) return false
     }
     return true
 }
