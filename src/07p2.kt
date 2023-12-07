@@ -30,31 +30,17 @@ fun main() {
 
     data class Hand(val cards: SortedMap<Card, Int>, val bid: Int, val cardsArray: List<Card>)
 
-    fun Hand.isFiveOfAKind() = this.cards.values.size == 1
-
-    fun Hand.isFourOfAKind(): Boolean {
-        if (this.cards.values.size != 2) return false
-        return this.cards.values.maxOf { it } == 4
-    }
-
-    fun Hand.isFullHouse(): Boolean {
-        if (this.cards.values.size != 2) return false
-        return this.cards.values.sorted() == listOf(2, 3)
-    }
-
-    fun Hand.isThreeOfAKind(): Boolean {
-        if (this.cards.values.size != 3) return false
-        return this.cards.values.maxOf { it } == 3
-    }
-
-    fun Hand.isTwoPair(): Boolean {
-        if (this.cards.values.size != 3) return false
-        return this.cards.values.maxOf { it } == 2
-    }
-
-    fun Hand.isOnePair(): Boolean {
-        if (this.cards.values.size != 4) return false
-        return this.cards.values.maxOf { it } == 2
+    fun Hand.typeOf() : Int {
+        val counts = this.cardsArray.groupingBy { it }.eachCount().values
+        return when {
+            5 in counts -> 6
+            4 in counts -> 5
+            3 in counts && 2 in counts -> 4
+            3 in counts -> 3
+            2 in counts && 2 in (counts - 2) -> 2
+            2 in counts -> 1
+            else -> 0
+        }
     }
 
     fun Hand.rankOf() : Int {
@@ -65,14 +51,7 @@ fun main() {
             cardsScore += offSet * c.rankOf()
         }
         offSet *= 15
-
-        if (this.isFiveOfAKind()) return 7 * offSet + cardsScore
-        if (this.isFourOfAKind()) return 6 * offSet + cardsScore
-        if (this.isFullHouse()) return 5 * offSet + cardsScore
-        if (this.isThreeOfAKind()) return 4 * offSet + cardsScore
-        if (this.isTwoPair()) return 3 * offSet + cardsScore
-        if (this.isOnePair()) return 2 * offSet + cardsScore
-        return offSet + cardsScore
+        return this.typeOf() * offSet + cardsScore
     }
 
     fun Hand.replaceJokers(): Hand {
