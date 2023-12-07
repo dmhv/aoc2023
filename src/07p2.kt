@@ -73,8 +73,6 @@ fun main() {
         return Hand(cardCounts.toSortedMap(cardComparator), this.bid, this.cardsArray)
     }
 
-    val handComparator = Comparator<Hand> { h1, h2 -> h1.rankOf() - h2.rankOf() }
-
     val hands = mutableListOf<Hand>()
     for (line in lines) {
         val (cards, bid) = line.split(" ")
@@ -90,11 +88,11 @@ fun main() {
         hands.add(handReplaced)
     }
 
-    var out = 0
-    for ((i, h) in hands.sortedWith(handComparator).withIndex()) {
-        out += (i + 1) * h.bid
-    }
-    out.println()
+    hands
+        .sortedBy { it.rankOf() }
+        .mapIndexed { i, h -> (i + 1) * h.bid }
+        .sum()
+        .println()
 }
 
 
