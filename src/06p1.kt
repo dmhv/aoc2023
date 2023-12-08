@@ -11,6 +11,3 @@ fun main() {
     val races = times.indices.map { Race(times[it], records[it]) }
     races.map { it.numWaysToWin() }.reduce { acc, i -> acc * i }.println()
 }
-
-
-

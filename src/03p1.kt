@@ -24,4 +24,3 @@ fun main() {
 
     numbers.filter { it.isAdjacentToAnyOf(anchors) }.sumOf { it.value }.println()
 }
-

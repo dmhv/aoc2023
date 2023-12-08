@@ -13,6 +13,3 @@ fun main() {
 
     (time - numWaysToLoseFromLeft * 2 + 1).println()
 }
-
-
-

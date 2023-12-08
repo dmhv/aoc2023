@@ -56,6 +56,3 @@ fun main() {
     }
     minLocation.println()
 }
-
-
-

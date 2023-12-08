@@ -73,7 +73,3 @@ fun main() {
         .sum()
         .println()
 }
-
-
-
-

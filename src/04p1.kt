@@ -21,4 +21,3 @@ fun main() {
     }
     cards.sumOf { it.score() }.println()
 }
-
