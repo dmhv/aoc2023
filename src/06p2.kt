@@ -2,8 +2,8 @@ fun main() {
     val lines = readInput("06")
     val regexNum = Regex("(\\d+)")
 
-    val time = regexNum.findAll(lines[0]).toList().map { it.value }.joinToString("").toLong()
-    val record = regexNum.findAll(lines[1]).toList().map { it.value }.joinToString("").toLong()
+    val time = regexNum.findAll(lines[0]).toList().joinToString("") { it.value }.toLong()
+    val record = regexNum.findAll(lines[1]).toList().joinToString("") { it.value }.toLong()
 
     var numWaysToLoseFromLeft = 0L
     for (i in (0..time)) {
