@@ -35,7 +35,3 @@ fun main() {
 
     nodeToLoopLength.values.map { it.toLong() }.reduce { acc, l -> lcm(acc, l) }.println()
 }
-
-
-
-
