@@ -1,3 +1,5 @@
+import kotlin.math.max
+
 fun main() {
     val lines = readInput("08")
 
@@ -24,20 +26,14 @@ fun main() {
         i++
     }
 
-    fun findLCM(a: Long, b: Long): Long {
-        val larger = if (a > b) a else b
-        val maxLcm = a * b
-        var lcm = larger
-        while (lcm <= maxLcm) {
-            if (lcm % a == 0L && lcm % b == 0L) {
-                return lcm
-            }
-            lcm += larger
-        }
-        return maxLcm
+    fun gcd(a: Long, b: Long): Long {
+        if (a == 0L || b == 0L) return max(a, b)
+        return if (a > b) gcd(a % b, b) else gcd(a, b % a)
     }
 
-    nodeToLoopLength.values.map { it.toLong() }.reduce { acc, l -> findLCM(acc, l) }.println()
+    fun lcm(a: Long, b: Long) = a * b / gcd(a, b)
+
+    nodeToLoopLength.values.map { it.toLong() }.reduce { acc, l -> lcm(acc, l) }.println()
 }
 
 
