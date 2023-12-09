@@ -1,10 +1,6 @@
 fun main() {
     val lines = readInput("09")
-
-    val ls = mutableListOf<List<Int>>()
-    for (l in lines) {
-        ls.add(l.split(" ").map { it.toInt() })
-    }
+    val ls = lines.map { l -> l.split(" ").map { it.toInt() }}
 
     var out = 0
     for (l in ls) {
