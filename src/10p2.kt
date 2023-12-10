@@ -22,7 +22,7 @@ fun main() {
         if (this.c > 0 && v in "S-7J" && grid[Tile(r, c - 1)]!! in "-LF") out.add(Tile(r , c - 1))
         if (this.c < maxCol && v in "S-LF" && grid[Tile(r, c + 1)]!! in "-7J") out.add(Tile(r, c + 1))
 
-        return out.filter { grid[it] != "." }
+        return out
     }
 
     val distanceToTile = mutableMapOf<Tile, Int>()
@@ -49,16 +49,18 @@ fun main() {
 
     grid[start] = "|" // I know, could've figured it out based on neighbours
     val enclosedTiles = mutableListOf<Tile>()
+    val pathTiles = distanceToTile.keys
+
     for (r in 0..maxRow) {
         for (c in 0..maxCol) {
             val thisTile = Tile(r, c)
-            if (!distanceToTile.containsKey(thisTile)) {
-                val fromLeft = distanceToTile.filter { it.key.c < c && it.key.r == r && grid[it.key]!! != "-" }
-                var cntWall = fromLeft.count { grid[it.key]!! == "|" }
-                var nL = fromLeft.count { grid[it.key]!! == "L" }
-                var nF = fromLeft.count { grid[it.key]!! == "F" }
-                var n7 = fromLeft.count { grid[it.key]!! == "7" }
-                var nJ = fromLeft.count { grid[it.key]!! == "J" }
+            if (thisTile !in pathTiles) {
+                val fromLeft = pathTiles.filter { it.c < c && it.r == r && grid[it]!! != "-" }
+                var cntWall = fromLeft.count { grid[it]!! == "|" }
+                var nL = fromLeft.count { grid[it]!! == "L" }
+                var nF = fromLeft.count { grid[it]!! == "F" }
+                var n7 = fromLeft.count { grid[it]!! == "7" }
+                var nJ = fromLeft.count { grid[it]!! == "J" }
 
                 while (nL > 0 && n7 > 0) nL--.also { n7-- }.also { cntWall++ }
                 while (nF > 0 && nJ > 0) nF--.also { nJ-- }.also { cntWall++ }
