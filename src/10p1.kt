@@ -22,7 +22,7 @@ fun main() {
         if (this.c > 0 && v in "S-7J" && grid[Tile(r, c - 1)]!! in "-LF") out.add(Tile(r , c - 1))
         if (this.c < maxCol && v in "S-LF" && grid[Tile(r, c + 1)]!! in "-7J") out.add(Tile(r, c + 1))
 
-        return out.filter { grid.containsKey(it) && grid[it] != "." }
+        return out.filter { grid[it] != "." }
     }
 
     val distanceToTile = mutableMapOf<Tile, Int>()
