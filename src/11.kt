@@ -38,7 +38,7 @@ fun main() {
         }
     }
 
-    for ((i, _) in galaxies[0].coords.withIndex()) galaxies = adjustCoords(galaxies, i)
+    for (i in 0..<galaxies[0].coords.size) galaxies = adjustCoords(galaxies, i)
 
     var sumOfDistances = 0L
     for ((i, g1) in galaxies.withIndex()) {
