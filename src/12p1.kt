@@ -12,25 +12,17 @@ fun main() {
                 (1..n).forEach { _ -> add(-1) }
             })
         }
-        if (n == 1) {
-            return listOf(listOf(-1), listOf(1))
-        }
 
         val out = mutableListOf<List<Int>>()
-        var first: Int
-        var next: List<List<Int>>
 
-        if (n > m) {
-            first = 1
-            next = generateOptions(n - 1, m)
-            next.forEach {
-                out.add(buildList {
-                    add(first)
-                    addAll(it)
-                })
-            }
+        var first = 1
+        var next: List<List<Int>> = generateOptions(n - 1, m)
+        next.forEach {
+            out.add(buildList {
+                add(first)
+                addAll(it)
+            })
         }
-
         first = -1
         next = generateOptions(n - 1, m - 1)
         next.forEach {
@@ -39,6 +31,8 @@ fun main() {
                 addAll(it)
             })
         }
+
+
         return out
     }
 
