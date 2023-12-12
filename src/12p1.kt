@@ -1,26 +1,44 @@
 fun main() {
     val lines = readInput("12")
 
-    fun generateOptions(n: Int): List<List<Int>> {
+    fun generateOptions(n: Int, m: Int): List<List<Int>> {
+        if (m == 0) {
+            return listOf(buildList {
+                (1..n).forEach { _ -> add(1) }
+            })
+        }
+        if (n == m) {
+            return listOf(buildList {
+                (1..n).forEach { _ -> add(-1) }
+            })
+        }
         if (n == 1) {
             return listOf(listOf(-1), listOf(1))
         }
-        val prev = generateOptions(n-1)
         val out = mutableListOf<List<Int>>()
+        var first: Int
+        var next: List<List<Int>>
 
-        var thisOption = -1
-        prev.forEach {
-            val option = mutableListOf(thisOption)
-            option.addAll(it)
-            out.add(option)
+        if (n > m) {
+            first = 1
+            next = generateOptions(n - 1, m)
+            next.forEach {
+                out.add(buildList {
+                    add(first)
+                    addAll(it)
+                })
+            }
         }
 
-        thisOption = 1
-        prev.forEach {
-            val option = mutableListOf(thisOption)
-            option.addAll(it)
-            out.add(option)
+        first = -1
+        next = generateOptions(n - 1, m - 1)
+        next.forEach {
+            out.add(buildList {
+                add(first)
+                addAll(it)
+            })
         }
+
         return out
     }
 
@@ -74,8 +92,8 @@ fun main() {
             continue
         }
         val existingDamaged = r.vs.count { it == -1 }
-
-        val options = generateOptions(optionsDamaged)
+        val remainingDamaged = r.targetDamaged - existingDamaged
+        val options = generateOptions(optionsDamaged, remainingDamaged)
 
         val filteredOptions = options.filter { o ->  o.count { it == -1 } + existingDamaged == r.targetDamaged }
         for (option in filteredOptions) {
