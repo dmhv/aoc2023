@@ -15,6 +15,7 @@ fun main() {
         if (n == 1) {
             return listOf(listOf(-1), listOf(1))
         }
+
         val out = mutableListOf<List<Int>>()
         var first: Int
         var next: List<List<Int>>
@@ -38,7 +39,6 @@ fun main() {
                 addAll(it)
             })
         }
-
         return out
     }
 
@@ -85,32 +85,27 @@ fun main() {
 
     var cntOptions = 0
     for (r in records) {
-        var thisRecordOptions = 0
-        val optionsDamaged = r.vs.count {it == 0}
-        if (optionsDamaged <= 0) {
+        var cntOptionsForThisRecord = 0
+        val cntUnknown = r.vs.count {it == 0}
+        if (cntUnknown == 0) {
             cntOptions++
             continue
         }
-        val existingDamaged = r.vs.count { it == -1 }
-        val remainingDamaged = r.targetDamaged - existingDamaged
-        val options = generateOptions(optionsDamaged, remainingDamaged)
+        val cntDamaged = r.vs.count { it == -1 }
+        val remainingDamaged = r.targetDamaged - cntDamaged
+        val options = generateOptions(cntUnknown, remainingDamaged)
 
-        val filteredOptions = options.filter { o ->  o.count { it == -1 } + existingDamaged == r.targetDamaged }
-        for (option in filteredOptions) {
-            val toCheck = mutableListOf<Int>()
-            var j = 0
-            for (el in r.vs) {
-                if (el != 0) toCheck.add(el)
-                else {
-                    toCheck.add(option[j])
-                    j++
+        for (option in options) {
+            val toCheck = buildList {
+                var j = 0
+                for (el in r.vs) {
+                    if (el != 0) add(el)
+                    else add(option[j]).also { j++ }
                 }
             }
-            if (isValid(toCheck, r.groups)) {
-                thisRecordOptions += 1
-            }
+            if (isValid(toCheck, r.groups)) cntOptionsForThisRecord += 1
         }
-        cntOptions += thisRecordOptions
+        cntOptions += cntOptionsForThisRecord
     }
     cntOptions.println()
 }
