@@ -13,26 +13,20 @@ fun main() {
             })
         }
 
-        val out = mutableListOf<List<Int>>()
-
-        var first = 1
-        var next: List<List<Int>> = generateOptions(n - 1, m)
-        next.forEach {
-            out.add(buildList {
-                add(first)
-                addAll(it)
-            })
+        val out = buildList {
+            generateOptions(n - 1, m).forEach {
+                add(buildList {
+                    add(1)
+                    addAll(it)
+                })
+            }
+            generateOptions(n - 1, m - 1).forEach {
+                add(buildList {
+                    add(-1)
+                    addAll(it)
+                })
+            }
         }
-        first = -1
-        next = generateOptions(n - 1, m - 1)
-        next.forEach {
-            out.add(buildList {
-                add(first)
-                addAll(it)
-            })
-        }
-
-
         return out
     }
 
