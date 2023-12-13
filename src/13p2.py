@@ -46,7 +46,7 @@ for line in lines:
 sum_row_splits = 0
 sum_col_splits = 0
 
-for mi, m in enumerate(ms):
+for m in ms:
     initial_row_split = find_split_by_axis(m, 0, -1)
     initial_col_split = find_split_by_axis(m, 1, -1)
     stop = False
