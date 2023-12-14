@@ -1,6 +1,6 @@
 import numpy as np
 
-with open("../inp/14tiny.txt", 'r') as f:
+with open("../inp/14.txt", 'r') as f:
     lines = f.readlines()
 
 
@@ -15,11 +15,6 @@ m = np.vstack(thisMatrixRows)
 
 for c in range(m.shape[1]):
     cubes_idx = np.where(m[:, c] == -1)[0]
-    if not cubes_idx.any():
-        rocks_cnt = np.sum(m[:, c] == 1)
-        m[0:rocks_cnt, c] = 1
-        m[rocks_cnt:, c] = 0
-        continue
     cubes_idx = np.hstack([-1, cubes_idx, m.shape[1] + 1])
     for i, cube_idx in enumerate(cubes_idx[1:]):
         prev_cube_idx = cubes_idx[i] + 1

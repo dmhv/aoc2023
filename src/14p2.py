@@ -34,12 +34,7 @@ def tilt(arr: np.array, direction: str) -> np.array:
 
     for c in range(arr.shape[1]):
         cubes_idx = np.where(arr[:, c] == -1)[0]
-        if not cubes_idx.any():
-            rocks_cnt = np.sum(arr[:, c] == 1)
-            arr[0:rocks_cnt, c] = 1
-            arr[rocks_cnt:, c] = 0
-            continue
-        cubes_idx = np.hstack([-1, cubes_idx, arr.shape[1] + 1])
+        cubes_idx = np.hstack([-1, cubes_idx, arr.shape[1] + 1])  # padding from both sides
         for j, cube_idx in enumerate(cubes_idx[1:]):
             prev_cube_idx = cubes_idx[j] + 1
             rocks_cnt = np.sum(arr[prev_cube_idx:cube_idx, c] == 1)
