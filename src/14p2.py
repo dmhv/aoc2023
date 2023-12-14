@@ -1,6 +1,5 @@
 import numpy as np
 
-
 with open("../inp/14.txt", 'r') as f:
     lines = f.readlines()
 
@@ -41,8 +40,8 @@ def tilt(arr: np.array, direction: str) -> np.array:
             arr[rocks_cnt:, c] = 0
             continue
         cubes_idx = np.hstack([-1, cubes_idx, arr.shape[1] + 1])
-        for i, cube_idx in enumerate(cubes_idx[1:]):
-            prev_cube_idx = cubes_idx[i]+1
+        for j, cube_idx in enumerate(cubes_idx[1:]):
+            prev_cube_idx = cubes_idx[j] + 1
             rocks_cnt = np.sum(arr[prev_cube_idx:cube_idx, c] == 1)
             first_rock_idx = prev_cube_idx
             last_rock_idx = first_rock_idx + rocks_cnt

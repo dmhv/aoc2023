@@ -22,7 +22,7 @@ for c in range(m.shape[1]):
         continue
     cubes_idx = np.hstack([-1, cubes_idx, m.shape[1] + 1])
     for i, cube_idx in enumerate(cubes_idx[1:]):
-        prev_cube_idx = cubes_idx[i]+1
+        prev_cube_idx = cubes_idx[i] + 1
         rocks_cnt = np.sum(m[prev_cube_idx:cube_idx, c] == 1)
         first_rock_idx = prev_cube_idx
         last_rock_idx = first_rock_idx + rocks_cnt
