@@ -1,4 +1,3 @@
-import java.util.stream.IntStream
 import kotlin.streams.toList
 
 fun main() {
@@ -6,25 +5,24 @@ fun main() {
 
     data class Lens(val label: String, var strength: Int)
 
-    fun hash(ints: IntStream) = ints.toList().fold(0) { acc, i -> (acc + i) * 17 % 256 }
+    fun hash(s: String) = s.chars().toList().fold(0) { acc, i -> (acc + i) * 17 % 256 }
 
     val boxToLenses = buildMap<Int, MutableList<Lens>> { (0..255).forEach { put(it, mutableListOf()) } }.toMutableMap()
 
     for (line in lines) {
         if (line.contains('=')) {
             val (label, strength) = line.split("=")
-            val hashedLabel = hash(label.chars())
-            val intStrength = strength.toInt()
+            val hashedLabel = hash(label)
             if (boxToLenses[hashedLabel]!!.any { it.label == label} ) {
                 val foundLens = boxToLenses[hashedLabel]!!.first { it.label == label }
-                foundLens.strength = intStrength
+                foundLens.strength = strength.toInt()
             } else {
-                boxToLenses[hashedLabel]!!.add(Lens(label, intStrength))
+                boxToLenses[hashedLabel]!!.add(Lens(label, strength.toInt()))
             }
         }
         else {
             val label = line.split("-")[0]
-            val hashedLabel = hash(label.chars())
+            val hashedLabel = hash(label)
             boxToLenses[hashedLabel] = boxToLenses[hashedLabel]!!.filter { it.label != label }.toMutableList()
         }
     }
