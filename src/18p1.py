@@ -22,6 +22,7 @@ area = 0
 for (p1, p0) in zip(points[1:], points[:-1]):
     area += (p0[0] + p1[0]) * (p0[1] - p1[1])
 area = abs(area) // 2
+
 print("Area (Shoelace formula) is", area)
 print("Count of boundary points is", cnt_boundary_points)
 cnt_interior_points = area - cnt_boundary_points // 2 + 1
