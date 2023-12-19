@@ -1,7 +1,5 @@
 import java.lang.Exception
 
-
-
 fun main() {
     val lines = readInput("19")
 
