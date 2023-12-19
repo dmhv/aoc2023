@@ -90,27 +90,26 @@ fun main() {
     }
 
     val startCube = Cube(buildMap {
+        // end is not included
         set("x", Interval(1, 4001))
         set("m", Interval(1, 4001))
         set("a", Interval(1, 4001))
         set("s", Interval(1, 4001))
     })
 
-    val toProcess = mutableListOf<Pair<String, Cube>>()  // first element - workflow label
+    // first element - workflow label
+    val toProcess = mutableListOf<Pair<String, Cube>>()
     toProcess.add(Pair("in", startCube))
     val accepted = mutableListOf<Cube>()
 
     while (toProcess.isNotEmpty()) {
-        val el = toProcess.removeFirst()
-        val label = el.first
-        val cube = el.second
+        val (label, cube) = toProcess.removeFirst()
         val wf = workflows[label]!!
+        // first element - index of the rule that should be applied
+        val thisToProcess = mutableListOf(Pair(0, cube))
 
-        val thisToProcess = mutableListOf(Pair(0, cube))  // first element - index of the rule that should be applied
         while (thisToProcess.isNotEmpty()) {
-            val thisPair = thisToProcess.removeFirst()
-            val ruleIdx = thisPair.first
-            val thisCube = thisPair.second
+            val (ruleIdx, thisCube) = thisToProcess.removeFirst()
             val rule = wf.rules[ruleIdx]
 
             val splitRes = thisCube.split(
@@ -118,20 +117,26 @@ fun main() {
                 value = rule.threshold,
                 op = rule.op
             )
+
             if (splitRes.satisfied != null) {
                 if (rule.res !in listOf("A", "R")) {
+                    // not done yet, move it to the next workflow
                     toProcess.add(Pair(rule.res, splitRes.satisfied))
                 } else if (rule.res == "A") {
+                    // done, we only care about those that end in "A"
                     accepted.add(splitRes.satisfied)
                 }
             }
             if (splitRes.notSatisfied != null) {
                 if (ruleIdx < wf.rules.size - 1) {
+                    // not done, and there are more rules in this workflow
                     thisToProcess.add(Pair(ruleIdx + 1, splitRes.notSatisfied))
                 } else {
                     if (wf.default !in listOf("A", "R")) {
+                        // not done, and there are no rules in this workflow, so move to next
                         toProcess.add(Pair(wf.default, splitRes.notSatisfied))
                     } else if (wf.default == "A") {
+                        // done
                         accepted.add(splitRes.notSatisfied)
                     }
                 }
