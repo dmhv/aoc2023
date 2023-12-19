@@ -76,10 +76,5 @@ fun main() {
         if (step == "A") acceptedParts.add(part)
     }
 
-    var out = 0
-    for (part in acceptedParts) {
-        val thisRes = part.vs.values.reduce { acc, i -> acc + i }
-        out += thisRes
-    }
-    out.println()
+    acceptedParts.sumOf { it.vs.values.reduce { acc, i -> acc + i } }.println()
 }
