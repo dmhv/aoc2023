@@ -11,7 +11,7 @@ fun main() {
 
     fun Interval.contains(v: Int) = v >= this.start && v < this.end
 
-    fun Interval.length() = this.end - this.start
+    fun Interval.length() = (this.end - this.start).toLong()
 
     data class Cube(val vs: Map<String, Interval>) {
         override fun toString(): String {
@@ -24,14 +24,7 @@ fun main() {
         }
     }
 
-    fun Cube.volume(): Long {
-        var out = 1L
-        for (k in this.vs.keys) {
-            val thisInterval = this.vs[k]!!
-            out *=thisInterval.length()
-        }
-        return out
-    }
+    fun Cube.volume() = this.vs.values.map { it.length() }.reduce { acc, i -> acc * i }
 
     data class SplitResult(val satisfied: Cube?, val notSatisfied: Cube?)
 
@@ -52,6 +45,7 @@ fun main() {
                 }
             }
         }
+
         val delta = if (op == "<") 0 else 1
         val left = Interval(thisInterval.start, value + delta)
         val right = Interval(value + delta, thisInterval.end)
@@ -59,6 +53,7 @@ fun main() {
         leftVs[key] = left
         val rightVs = this.vs.toMutableMap()
         rightVs[key] = right
+
         return if (op == "<") {
             SplitResult(satisfied = Cube(leftVs), notSatisfied = Cube(rightVs))
         } else {
@@ -96,15 +91,14 @@ fun main() {
         workflows[label] = Workflow(label = label, rules = rules, default = default)
     }
 
-    val startVs = buildMap {
+    val startCube = Cube(buildMap {
         set("x", Interval(1, 4001))
         set("m", Interval(1, 4001))
         set("a", Interval(1, 4001))
         set("s", Interval(1, 4001))
-    }
-    val startCube = Cube(startVs)
+    })
 
-    val toProcess = mutableListOf<Pair<String, Cube>>()
+    val toProcess = mutableListOf<Pair<String, Cube>>()  // first element - workflow label
     toProcess.add(Pair("in", startCube))
     val accepted = mutableListOf<Cube>()
 
@@ -114,7 +108,7 @@ fun main() {
         val cube = el.second
         val wf = workflows[label]!!
 
-        val thisToProcess = mutableListOf(Pair(0, cube))
+        val thisToProcess = mutableListOf(Pair(0, cube))  // first element - index of the rule that should be applied
         while (thisToProcess.isNotEmpty()) {
             val thisPair = thisToProcess.removeFirst()
             val ruleIdx = thisPair.first
@@ -122,9 +116,9 @@ fun main() {
             val rule = wf.rules[ruleIdx]
 
             val splitRes = thisCube.split(
-                    key = rule.label,
-                    value = rule.threshold,
-                    op = rule.op
+                key = rule.label,
+                value = rule.threshold,
+                op = rule.op
             )
             if (splitRes.satisfied != null) {
                 if (rule.res !in listOf("A", "R")) {
@@ -147,12 +141,5 @@ fun main() {
             }
         }
     }
-    var out = 0L
-    for (cube in accepted) {
-        val cubeVolume = cube.volume()
-        out += cubeVolume
-    }
-    out.println()
-    // 167409079868000
-    // 167409079868000
+    accepted.sumOf { it.volume() }.println()
 }
