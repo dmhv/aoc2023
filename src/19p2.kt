@@ -79,10 +79,10 @@ fun main() {
             val (ruleLabel, other) = r.split(Regex("[><]"))
             val (ruleThreshold, ruleRes) = other.split(":")
             val rule = Rule(
-                    label = ruleLabel,
-                    threshold = ruleThreshold.toInt(),
-                    op = ruleOp,
-                    res = ruleRes
+                label = ruleLabel,
+                threshold = ruleThreshold.toInt(),
+                op = ruleOp,
+                res = ruleRes
             )
             rules.add(rule)
         }
@@ -121,8 +121,7 @@ fun main() {
             if (splitRes.satisfied != null) {
                 if (rule.res !in listOf("A", "R")) {
                     toProcess.add(Pair(rule.res, splitRes.satisfied))
-                }
-                else if (rule.res == "A") {
+                } else if (rule.res == "A") {
                     accepted.add(splitRes.satisfied)
                 }
             }

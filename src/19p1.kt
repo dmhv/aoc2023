@@ -1,7 +1,5 @@
 import java.lang.Exception
 
-
-
 fun main() {
     val lines = readInput("19")
 
@@ -47,10 +45,10 @@ fun main() {
                 val (ruleLabel, other) = r.split(Regex("[><]"))
                 val (ruleThreshold, ruleRes) = other.split(":")
                 val rule = Rule(
-                        label = ruleLabel,
-                        threshold = ruleThreshold.toInt(),
-                        op = ruleOp,
-                        res = ruleRes
+                    label = ruleLabel,
+                    threshold = ruleThreshold.toInt(),
+                    op = ruleOp,
+                    res = ruleRes
                 )
                 rules.add(rule)
             }
@@ -59,10 +57,12 @@ fun main() {
 
         if (!isParsingWorkflows) {
             val kvs = line.drop(1).dropLast(1).split(",")
-            val vs = buildMap { kvs.forEach {
-                val (k, v) = it.split("=")
-                set(k, v.toInt())
-            } }
+            val vs = buildMap {
+                kvs.forEach {
+                    val (k, v) = it.split("=")
+                    set(k, v.toInt())
+                }
+            }
             parts.add(Part(vs))
         }
     }
