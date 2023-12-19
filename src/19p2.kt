@@ -3,33 +3,34 @@ import java.lang.Exception
 
 
 fun main() {
-    val lines = readInput("19tiny")
+    val lines = readInput("19")
 
     data class Rule(val label: String, val threshold: Int, val op: String, val res: String)
-
-    data class Part(val vs: Map<String, Int>)
-
-    fun Rule.evaluate(part: Part): String? {
-        return when (op) {
-            ">" -> if (part.vs[label]!! > threshold) res else null
-            "<" -> if (part.vs[label]!! < threshold) res else null
-            else -> throw Exception("Operation $op not implemented")
-        }
-    }
 
     data class Interval(val start: Int, val end: Int)
 
     fun Interval.contains(v: Int) = v >= this.start && v < this.end
 
-    fun Interval.print() = "[${this.start}, ${this.end})"
+    fun Interval.length() = this.end - this.start
 
-    data class Cube(val vs: Map<String, Interval>)
-
-    fun Cube.contains(part: Part): Boolean {
-        for (k in part.vs.keys) {
-            if (!this.vs[k]!!.contains(part.vs[k]!!)) return false
+    data class Cube(val vs: Map<String, Interval>) {
+        override fun toString(): String {
+            val out = StringBuilder()
+            for (k in this.vs.keys) {
+                val thisInterval = this.vs[k]!!
+                out.append("$k: ${thisInterval.start}..${thisInterval.end - 1} ")
+            }
+            return out.dropLast(1).toString()
         }
-        return true
+    }
+
+    fun Cube.volume(): Long {
+        var out = 1L
+        for (k in this.vs.keys) {
+            val thisInterval = this.vs[k]!!
+            out *=thisInterval.length()
+        }
+        return out
     }
 
     data class SplitResult(val satisfied: Cube?, val notSatisfied: Cube?)
@@ -65,21 +66,7 @@ fun main() {
         }
     }
 
-    fun Cube.print() {
-        val out = StringBuilder()
-        out.append("{")
-        for (k in this.vs.keys) {
-            out.append("$k ∈ ${this.vs[k]!!.print()}, ")
-        }
-        out.append("}")
-        println(out.toString())
-    }
-
     data class Workflow(val label: String, val rules: List<Rule>, val default: String)
-
-    fun Workflow.evaluate(part: Part): String {
-        return rules.firstNotNullOfOrNull { it.evaluate(part) } ?: this.default
-    }
 
     val workflows = mutableMapOf<String, Workflow>()
 
@@ -110,13 +97,12 @@ fun main() {
     }
 
     val startVs = buildMap {
-        set("x", Interval(1, 4000))
-        set("m", Interval(1, 4000))
-        set("a", Interval(1, 4000))
-        set("s", Interval(1, 4000))
+        set("x", Interval(1, 4001))
+        set("m", Interval(1, 4001))
+        set("a", Interval(1, 4001))
+        set("s", Interval(1, 4001))
     }
     val startCube = Cube(startVs)
-//    startCube.print()
 
     val toProcess = mutableListOf<Pair<String, Cube>>()
     toProcess.add(Pair("in", startCube))
@@ -127,36 +113,46 @@ fun main() {
         val label = el.first
         val cube = el.second
         val wf = workflows[label]!!
-        val thisToProcess = mutableListOf(cube)
+
+        val thisToProcess = mutableListOf(Pair(0, cube))
         while (thisToProcess.isNotEmpty()) {
-            val thisCube = thisToProcess.removeFirst()
-            for ((ruleIdx, rule) in wf.rules.withIndex()) {
-                val splitRes = thisCube.split(
-                        key = rule.label,
-                        value = rule.threshold,
-                        op = rule.op
-                )
-                if (splitRes.satisfied != null) {
-                    if (rule.res !in listOf("A", "R")) {
-                        toProcess.add(Pair(rule.res, splitRes.satisfied))
-                    }
-                    else if (rule.res == "A") {
-                        accepted.add(splitRes.satisfied)
-                    }
+            val thisPair = thisToProcess.removeFirst()
+            val ruleIdx = thisPair.first
+            val thisCube = thisPair.second
+            val rule = wf.rules[ruleIdx]
+
+            val splitRes = thisCube.split(
+                    key = rule.label,
+                    value = rule.threshold,
+                    op = rule.op
+            )
+            if (splitRes.satisfied != null) {
+                if (rule.res !in listOf("A", "R")) {
+                    toProcess.add(Pair(rule.res, splitRes.satisfied))
                 }
-                if (splitRes.notSatisfied != null) {
-                    if (ruleIdx < wf.rules.size - 1) {
-                        thisToProcess.add(splitRes.notSatisfied)
-                    } else {
-                        if (wf.default !in listOf("A", "R")) {
-                            toProcess.add(Pair(wf.default, splitRes.notSatisfied))
-                        } else if (wf.default == "A") {
-                            accepted.add(splitRes.notSatisfied)
-                        }
+                else if (rule.res == "A") {
+                    accepted.add(splitRes.satisfied)
+                }
+            }
+            if (splitRes.notSatisfied != null) {
+                if (ruleIdx < wf.rules.size - 1) {
+                    thisToProcess.add(Pair(ruleIdx + 1, splitRes.notSatisfied))
+                } else {
+                    if (wf.default !in listOf("A", "R")) {
+                        toProcess.add(Pair(wf.default, splitRes.notSatisfied))
+                    } else if (wf.default == "A") {
+                        accepted.add(splitRes.notSatisfied)
                     }
                 }
             }
         }
     }
-    accepted.println()
+    var out = 0L
+    for (cube in accepted) {
+        val cubeVolume = cube.volume()
+        out += cubeVolume
+    }
+    out.println()
+    // 167409079868000
+    // 167409079868000
 }
