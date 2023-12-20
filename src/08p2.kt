@@ -26,12 +26,5 @@ fun main() {
         i++
     }
 
-    fun gcd(a: Long, b: Long): Long {
-        if (a == 0L || b == 0L) return max(a, b)
-        return if (a > b) gcd(a % b, b) else gcd(a, b % a)
-    }
-
-    fun lcm(a: Long, b: Long) = a * b / gcd(a, b)
-
     nodeToLoopLength.values.map { it.toLong() }.reduce { acc, l -> lcm(acc, l) }.println()
 }

@@ -1,6 +1,7 @@
 import java.io.File
 import java.math.BigInteger
 import java.security.MessageDigest
+import kotlin.math.max
 
 fun readInput(name: String) = File("inp", "$name.txt").readLines()
 
@@ -25,3 +26,10 @@ fun String.allIndicesOf(target: String): List<Int> {
     }
     return out.toList()
 }
+
+fun gcd(a: Long, b: Long): Long {
+    if (a == 0L || b == 0L) return max(a, b)
+    return if (a > b) gcd(a % b, b) else gcd(a, b % a)
+}
+
+fun lcm(a: Long, b: Long) = a * b / gcd(a, b)
