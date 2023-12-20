@@ -11,15 +11,14 @@ fun main() {
     val points = mutableListOf<Point>()
 
     lines.forEach {
-        var (hexStr) = it.split(" ").takeLast(1)
-        hexStr = hexStr.substring(2, 8)
-        val d = hexStr.takeLast(1)
+        val hexStr = it.split(" ").last().substring(2, 8)
+        val d = hexStr.last()
         val cnt = hexStr.substring(0, 5).toLong(radix = 16)
         when (d) {
-            "0" -> c += cnt
-            "2" -> c -= cnt
-            "1" -> r += cnt
-            "3" -> r -= cnt
+            '0' -> c += cnt
+            '2' -> c -= cnt
+            '1' -> r += cnt
+            '3' -> r -= cnt
             else -> throw Exception("Unexpected direction $d")
         }
         points.add(Point(r, c))
