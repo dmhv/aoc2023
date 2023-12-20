@@ -1,3 +1,93 @@
+enum class State { OFF, ON }
+
+enum class Pulse { HIGH, LOW }
+
+data class Action(val from: Module, val to: Module, val pulse: Pulse)
+
+abstract class Module(val label: String) {
+    private val outputs = mutableListOf<Module>()
+
+    fun addOutput(target: Module) {
+        outputs.add(target)
+    }
+
+    fun getOutputs() = outputs.toList()
+
+    abstract override fun toString(): String
+
+    abstract fun pulse(a: Action): List<Action>
+
+    fun sendToAllOutputs(pulse: Pulse): List<Action> {
+        return buildList { outputs.forEach { m -> add(Action(this@Module, m, pulse)) } }
+    }
+}
+
+class Flip(label: String) : Module(label) {
+    private var state = State.OFF
+
+    override fun toString(): String {
+        return "Flip{$label} [$state]"
+    }
+
+    override fun pulse(a: Action): List<Action> {
+        if (a.pulse == Pulse.HIGH) return listOf()
+
+        // Pulse = LOW
+        when (state) {
+            State.OFF -> {
+                state = State.ON
+                return sendToAllOutputs(Pulse.HIGH)
+            }
+
+            State.ON -> {
+                state = State.OFF
+                return sendToAllOutputs(Pulse.LOW)
+            }
+        }
+    }
+}
+
+class Conj(label: String) : Module(label) {
+    private val inputsLast = mutableMapOf<Module, Pulse>()
+
+    fun addInput(input: Module) {
+        inputsLast[input] = Pulse.LOW
+    }
+
+    override fun toString(): String {
+        return "Conj{$label} [${inputsLast.values.all { it == Pulse.HIGH }}]"
+    }
+
+    override fun pulse(a: Action): List<Action> {
+        inputsLast[a.from] = a.pulse
+
+        if (inputsLast.values.all { it == Pulse.HIGH }) {
+            return sendToAllOutputs(Pulse.LOW)
+        }
+
+        return sendToAllOutputs(Pulse.HIGH)
+    }
+}
+
+class Broadcaster : Module("broadcaster") {
+    override fun toString() = "Broadcaster"
+
+    override fun pulse(a: Action): List<Action> {
+        return sendToAllOutputs(a.pulse)
+    }
+}
+
+class Dummy(label: String) : Module(label) {
+    override fun toString(): String {
+        return "Dummy{$label}"
+    }
+
+    override fun pulse(a: Action): List<Action> {
+        if (a.pulse == Pulse.LOW) throw Exception("Stop")
+        return listOf()
+    }
+}
+
 fun main() {
     val lines = readInput("20")
     val modules = mutableMapOf<String, Module>()
@@ -56,93 +146,4 @@ fun main() {
     }
 
     (cntLowPulses * cntHighPulses).println()
-}
-
-enum class State { OFF, ON }
-
-enum class Pulse { HIGH, LOW }
-
-data class Action(val from: Module, val to: Module, val pulse: Pulse)
-
-abstract class Module(val label: String) {
-    private val outputs = mutableListOf<Module>()
-
-    fun addOutput(target: Module) {
-        outputs.add(target)
-    }
-
-    fun getOutputs() = outputs.toList()
-
-    abstract override fun toString(): String
-
-    abstract fun pulse(a: Action): List<Action>
-
-    fun sendToAllOutputs(pulse: Pulse): List<Action> {
-        return buildList { outputs.forEach { m -> add(Action(this@Module, m, pulse)) } }
-    }
-}
-
-class Flip(label: String) : Module(label) {
-    private var state = State.OFF
-
-    override fun toString(): String {
-        return "Flip{$label} [$state]"
-    }
-
-    override fun pulse(a: Action): List<Action> {
-        if (a.pulse == Pulse.HIGH) return listOf()
-
-        // Pulse = LOW
-        when (state) {
-            State.OFF -> {
-                state = State.ON
-                return sendToAllOutputs(Pulse.HIGH)
-            }
-            State.ON -> {
-                state = State.OFF
-                return sendToAllOutputs(Pulse.LOW)
-            }
-        }
-    }
-}
-
-class Conj(label: String) : Module(label) {
-    private val inputsLast = mutableMapOf<Module, Pulse>()
-
-    fun addInput(input: Module) {
-        inputsLast[input] = Pulse.LOW
-    }
-
-    override fun toString(): String {
-        return "Conj{$label} [${inputsLast.values.all { it == Pulse.HIGH }}]"
-    }
-
-    override fun pulse(a: Action): List<Action> {
-        inputsLast[a.from] = a.pulse
-
-        if (inputsLast.values.all { it == Pulse.HIGH }) {
-            return sendToAllOutputs(Pulse.LOW)
-        }
-
-        return sendToAllOutputs(Pulse.HIGH)
-    }
-}
-
-class Broadcaster : Module("broadcaster") {
-    override fun toString() = "Broadcaster"
-
-    override fun pulse(a: Action): List<Action> {
-        return sendToAllOutputs(a.pulse)
-    }
-}
-
-class Dummy(label: String) : Module(label) {
-    override fun toString(): String {
-        return "Dummy{$label}"
-    }
-
-    override fun pulse(a: Action): List<Action> {
-        if (a.pulse == Pulse.LOW) throw Exception("Stop")
-        return listOf()
-    }
 }
