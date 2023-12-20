@@ -5,7 +5,7 @@ fun main() {
 
     data class Rule(val label: String, val threshold: Int, val op: String, val res: String)
 
-    data class Interval(val start: Int, val end: Int)
+    data class Interval(val start: Int, val end: Int)  // [start, end)
 
     fun Interval.contains(v: Int) = v >= this.start && v < this.end
 
