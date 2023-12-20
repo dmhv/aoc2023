@@ -71,6 +71,8 @@ abstract class Module(val label: String) {
         outputs.add(target)
     }
 
+    fun getOutputs() = outputs.toList()
+
     abstract override fun toString(): String
 
     abstract fun pulse(a: Action): List<Action>
