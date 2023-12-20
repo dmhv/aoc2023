@@ -23,8 +23,8 @@ fun main() {
 
     val workflows = mutableMapOf<String, Workflow>()
     val parts = mutableListOf<Part>()
-    var isParsingWorkflows = true
 
+    var isParsingWorkflows = true
     for (line in lines) {
         if (line.isBlank()) {
             isParsingWorkflows = false
