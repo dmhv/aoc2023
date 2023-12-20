@@ -138,10 +138,12 @@ fun main() {
         while (queue.isNotEmpty()) {
             val action = queue.removeFirst()
             val module = action.to
-            val processed = module.pulse(action)
-            processed.forEach { queue.addLast(it) }
-            if (action.pulse == Pulse.LOW) cntLowPulses += 1
-            if (action.pulse == Pulse.HIGH) cntHighPulses += 1
+            val nextActions = module.pulse(action)
+            nextActions.forEach { queue.addLast(it) }
+            when (action.pulse) {
+                Pulse.LOW -> cntLowPulses += 1
+                Pulse.HIGH -> cntHighPulses += 1
+            }
         }
     }
 
